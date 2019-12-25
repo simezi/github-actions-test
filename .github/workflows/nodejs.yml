@@ -1,25 +1,24 @@
-name: Node CI
-
-on: [push]
-
+name: post to ui_component
+on:
+  push:
+    branches: 
+      - master
+ 
 jobs:
-  build:
-
+  hi:
+    name: Hi
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [8.x, 10.x, 12.x]
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: yarn install, build, and test
-      run: |
-        yarn install --pure-lockfile
-        yarn run build --if-present
+    - name: Check out code
+      uses: actions/checkout@v1
+    - name: Slack Notification
+      # 前Stepの実行結果を判定
+      # success() or failure() or always()
+      if: always()
+      uses: rtCamp/action-slack-notify@master
       env:
-        CI: true
+        SLACK_CHANNEL: sandbox
+        SLACK_MESSAGE: 'おはよう'
+        SLACK_TITLE: 'タイトル'
+        SLACK_USERNAME: 'bot from matzz'
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
